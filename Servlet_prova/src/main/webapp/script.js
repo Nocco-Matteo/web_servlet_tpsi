@@ -1,0 +1,2 @@
+
+const ciao = () => alert("ciaooo");
