@@ -1,0 +1,7 @@
+INDEX VERSION 1.4+/home/nocco/codice/eclipse/.metadata/.plugins/org.eclipse.wst.jsdt.core/indexes
+3424228924.index
+185164296.index
+2023075825.index
+516413932.index
+1610096051.index
+3008304244.index
