@@ -23,6 +23,7 @@ import javax.servlet.http.HttpSession;
 import it.molinari.model.Utente;
 import it.molinari.service.UtenteService;
 
+@WebServlet("/")
 public  class  Controller <generico> extends HttpServlet
 {
 	private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  //data e ora
@@ -77,6 +78,8 @@ public  class  Controller <generico> extends HttpServlet
 					get_file(response,file);
 				break;
 				case "elimina": elimina(request,response,session);
+				break;
+				case "utenti": get_utenti(request,response);
 				break;
 				default: //ritorna l'index
 					//get_file(response,file);
@@ -254,6 +257,10 @@ public  class  Controller <generico> extends HttpServlet
 		
 	    in.close();
 	    out.flush();
+	}
+	public void get_utenti(HttpServletRequest request, HttpServletResponse response) throws Exception
+	{
+		
 	}
 	public String dividi_uri(String uri)//divide l'uri
 	{

@@ -126,16 +126,16 @@
 			</ul>
 			<ul class="navbar-nav">
 				<li class="nav-item">
-					<a class="nav-link" href="http://localhost:8080/Servlet_prova/index.jsp?page=<%=stringToBase64("profilo")%>">PROFILO</a>
+					<a class="nav-link" href="http://localhost:8080/Servlet/index.jsp?page=<%=stringToBase64("profilo")%>">PROFILO</a>
 				</li>
 			</ul>
 			<%} else{ %>
 			<ul class="navbar-nav r-0">
 				<li class="nav-item">
-					<a class="nav-link" href="http://localhost:8080/Servlet_prova/index.jsp?page=<%=stringToBase64("accedi")%>">ACCEDI </a>
+					<a class="nav-link" href="http://localhost:8080/Servlet/index.jsp?page=<%=stringToBase64("accedi")%>">ACCEDI </a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="http://localhost:8080/Servlet_prova/index.jsp?page=<%=stringToBase64("registra")%>">REGISTRATI</a>
+					<a class="nav-link" href="http://localhost:8080/Servlet/index.jsp?page=<%=stringToBase64("registra")%>">REGISTRATI</a>
 				</li>
 			</ul>
 			<%} %>
@@ -148,7 +148,7 @@
 			<div class="centrale col-md-5 pt-2" style="background-image:url('${pageContext.request.contextPath}/centrale">
 				<%if(pagina.equals("registra") && (!accesso || (tipo_errore !=""))){%>
 					<!-- BLOCCO REGISTRAZIONE -->
-					<form method="POST" action="http://localhost:8080/Servlet_prova/registra" >
+					<form method="POST" action="http://localhost:8080/Servlet/registra" >
 						<p><b>REGISTRAZIONE</b></p>
 						<hr>
 						<%switch(classe_errore){
@@ -186,13 +186,13 @@
 					<div class="bottoni">
 						<div class="d-flex flex-column align-items-center">
 							<p>Hai gia' un account?</p>
-							<button type="button" class="btn btn-primary button_a" ><a href="http://localhost:8080/Servlet_prova/index.jsp?page=<%=stringToBase64("accedi")%>">Accedi</a></button>
+							<button type="button" class="btn btn-primary button_a" ><a href="http://localhost:8080/Servlet/index.jsp?page=<%=stringToBase64("accedi")%>">Accedi</a></button>
 						</div>
 					</div>
 				
 				<%} else if(pagina.equals("accedi") && !accesso){ %>
 					<!-- BLOCCO ACCEDI -->
-					<form method="POST" action="http://localhost:8080/Servlet_prova/accedi">
+					<form method="POST" action="http://localhost:8080/Servlet/accedi">
 						<p><b>Accesso</b></p>
 						<hr>
 						<%switch(classe_errore){
@@ -217,12 +217,12 @@
 						<div class="bottoni">
 							<div class="d-flex flex-column align-items-center">
 								<p>Non hai ancora un account?</p>
-								<button type="button" class="btn btn-primary button_a" ><a href="http://localhost:8080/Servlet_prova/index.jsp?page=<%=stringToBase64("registra")%>">Registrati</a></button>
+								<button type="button" class="btn btn-primary button_a" ><a href="http://localhost:8080/Servlet/index.jsp?page=<%=stringToBase64("registra")%>">Registrati</a></button>
 							</div>
 						</div>
 					</form>
 				<% }else if(pagina.equals("profilo") && accesso){%>
-			        <form method="POST" action="http://localhost:8080/Servlet_prova/modifica">
+			        <form method="POST" action="http://localhost:8080/Servlet/modifica">
 			        	<p><b>Modifica Profilo Utente</b></p>
 			        	<hr>
 			            <div class="form-group">
@@ -279,7 +279,7 @@
 						Siamo impazienti di vedere cosa puoi fare con il tuo account<br>
 						e di averti tra i nostri utenti piu' attivi ed entusiasti.<br>
 						Buon divertimento!</p>
-				      <button type="button" class="btn btn-primary button_a" ><a href="http://localhost:8080/Servlet_prova/index.jsp?page=<%=stringToBase64("esci")%>">Esci</a></button>
+				      <button type="button" class="btn btn-primary button_a" ><a href="http://localhost:8080/Servlet/index.jsp?page=<%=stringToBase64("esci")%>">Esci</a></button>
 				    </div>
 				
 				<%} else{%>
@@ -312,7 +312,7 @@
 						<br>
 						Ti invitiamo a unirti a noi per un'esperienza unica e indimenticabile, <br>
 						che non vedrai l'ora di condividere con i tuoi amici. Ti aspettiamo!</p>
-				      <button type="button" class="btn btn-primary button_a" ><a href="http://localhost:8080/Servlet_prova/index.jsp?page=<%=stringToBase64("registra")%>">Registrati</a></button>
+				      <button type="button" class="btn btn-primary button_a" ><a href="http://localhost:8080/Servlet/index.jsp?page=<%=stringToBase64("registra")%>">Registrati</a></button>
 				    </div>
 				<%} %>
 			</div>
@@ -331,6 +331,7 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
 </body>
 </html>
 
