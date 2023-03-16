@@ -2,8 +2,10 @@ package it.molinari.controller;
 
 import com.google.gson.*;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
@@ -99,7 +101,7 @@ public  class  Controller extends HttpServlet
 				break;
 				case "elimina": elimina(request,response,session);
 				break;
-				case "esci": // esci(request,response,session); TODO
+				case "esci": esci(response,session); 
 				break;
 				case "utenti": response.sendRedirect("http://localhost:8080/Servlet/ajax.html");
 				break;
@@ -115,6 +117,12 @@ public  class  Controller extends HttpServlet
 		catch (Exception e){e.printStackTrace();}
 	}	
 	
+	//esce dall'account corrente
+	private void esci(HttpServletResponse response, HttpSession session) throws Exception {
+		session.invalidate();
+		response.sendRedirect("index.jsp");
+	}
+
 
 	//gestione curl post
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -180,6 +188,87 @@ public  class  Controller extends HttpServlet
 		
 	    response.setContentType("application/json");
 	    response.getWriter().write(json);
+	}
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		try 
+		{
+			System.out.println(dtf.format(now));  
+			log("Sono nel delete");
+			HttpSession session = request.getSession();
+			servizio = new UtenteService();//servizio per eseguire l'operazione richiesta dall'utente
+			pagina = dividi_uri(request.getRequestURI());//pagina richiesta
+			
+			log("Pagina: "+pagina);
+			switch(pagina)
+			{
+				case "delete_utente": delete_utente(request,response, session); //esegue la registrazione di un utente
+				break;
+				default: throw new IllegalArgumentException("Errore");
+			}
+		} 
+		catch(Exception e){e.printStackTrace();}
+	}
+	
+	protected void doPut(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException
+	{
+		try 
+		{
+			System.out.println(dtf.format(now));  
+			log("Sono nel put");
+			HttpSession session = request.getSession();
+			servizio = new UtenteService();//servizio per eseguire l'operazione richiesta dall'utente
+			pagina = dividi_uri(request.getRequestURI());//pagina richiesta
+			
+			log("Pagina: "+pagina);
+			switch(pagina)
+			{
+				case "put_utente": put(request, response);
+					
+				break;
+				default: throw new IllegalArgumentException("Errore");
+			}
+		} 
+		catch(Exception e){e.printStackTrace();}
+	}
+	private void put(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String json = leggi_corpo_request(request);
+		System.out.println("parametro: "+json);
+		Gson gson = new Gson();
+		Utente utente = new Utente();
+		utente = gson.fromJson(json, Utente.class);
+		System.out.println(utente.get_email());
+		api = new Api_rest();
+		
+		api.modifica_account(utente);
+		
+		response.setContentType("application/json");
+		response.getWriter().write("{\"success\": true}");
+	}
+
+	public String leggi_corpo_request(HttpServletRequest request) throws Exception
+	{
+		BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+        String line;
+        StringBuilder sb = new StringBuilder();
+        while ((line = reader.readLine()) != null) {
+            sb.append(line);
+        }
+        return sb.toString();
+	}
+	public void delete_utente(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception
+	{ 
+		log("elimina");
+		log("parametro: "+request.getAttribute("email"));
+		api = new Api_rest();
+		//avvio servizio di elimina account
+		int risposta = api.elimina_account(request.getParameter("email"));
+		log("prima di set attribute");
+		//impostazione parametri della sessione
+		session.invalidate();
+        
+        dispatcher = request.getRequestDispatcher("ajax.html");
+        dispatcher.forward(request, response);
 	}
 	//esegue la registrazione di un utente e rimanda alla pagina di benvenuto
 	public void registra(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception

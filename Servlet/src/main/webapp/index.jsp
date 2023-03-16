@@ -125,9 +125,11 @@
 				</li>
 			</ul>
 			<ul class="navbar-nav">
+			<%if(email_sess.equals("admin@admin")) {%>
 				<li class="nav-item">
 					<a class="nav-link" href="http://localhost:8080/Servlet/utenti">UTENTI</a>
 				</li>
+				<%}%>
 				<li class="nav-item">
 					<a class="nav-link" href="http://localhost:8080/Servlet/index.jsp?page=<%=stringToBase64("profilo")%>">PROFILO</a>
 				</li>
@@ -282,7 +284,7 @@
 						Siamo impazienti di vedere cosa puoi fare con il tuo account<br>
 						e di averti tra i nostri utenti piu' attivi ed entusiasti.<br>
 						Buon divertimento!</p>
-				      <button type="button" class="btn btn-primary button_a" ><a href="http://localhost:8080/Servlet/index.jsp?page=<%=stringToBase64("esci")%>">Esci</a></button>
+				      <button type="button" class="btn btn-primary button_a" ><a href="http://localhost:8080/Servlet/esci">Esci</a></button>
 				    </div>
 				
 				<%} else{%>

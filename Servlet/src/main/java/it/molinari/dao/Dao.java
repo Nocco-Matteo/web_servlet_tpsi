@@ -20,6 +20,7 @@ public class Dao
 		query_accesso="select nome,cognome,password,email from utente where email=? and password=?", //accesso
 		query_registra="insert into utente(nome,cognome,email,password) values(?,?,?,?)", //registra
 		query_modifica="update utente set nome=?,cognome=?,password=? where email = ?", //modifica
+		api_query_modifica="update utente set nome=?,cognome=? where email = ?", //modifica
 		query_elimina="delete from utente where email=?",//elimina
 		query_get_utenti="select nome,cognome,email from utente"; 
 	private String driver;//driver per mysql 
@@ -144,10 +145,28 @@ public class Dao
 		return utente;
 	}
 	
+	//api_rest modifica credenziali account 
+		public void api_modifica_account(Utente utente) throws Exception
+		{
+			log("Sono nel dao modifica");
+			log(utente.get_email());
+			PreparedStatement prep = this.getConn().prepareStatement(api_query_modifica);
+			int risposta;
+			
+			prep.setString(1,stringToBase64(utente.get_nome()));
+		    prep.setString(2,stringToBase64(utente.get_cognome()));
+		    prep.setString(3,stringToBase64(utente.get_email()));
+		    
+		    log("Eseguo query...");
+		    risposta = prep.executeUpdate();//invio query
+			log("Query eseguita");
+			
+			//chiusura connessione
+			this.getConn().close();
+		}
 	public int elimina_account(String email) throws Exception
 	{
 		log("Sono nel dao elimina");
-		log(email);
 		PreparedStatement prep = this.getConn().prepareStatement(query_elimina);
 		int risposta;
 		

@@ -12,4 +12,14 @@ public class Api_rest {
 		Dao dao = new Dao();
 		return dao.get_utenti();
 	}
+	public int elimina_account(String email) throws Exception
+	{
+		Dao dao = new Dao();
+		return dao.elimina_account(email);
+	}
+	public void modifica_account(Utente utente) throws Exception
+	{
+		Dao dao = new Dao();
+		dao.api_modifica_account(utente);
+	}
 }

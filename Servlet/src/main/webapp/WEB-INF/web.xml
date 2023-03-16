@@ -24,12 +24,20 @@
   <url-pattern>/</url-pattern>
 </servlet-mapping>
 <servlet-mapping>
+  <servlet-name>default</servlet-name>
+  <url-pattern>/ajax.html</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
   <servlet-name>Controller</servlet-name>
   <url-pattern>/api_rest/get_utenti</url-pattern>
 </servlet-mapping>
 <servlet-mapping>
-  <servlet-name>default</servlet-name>
-  <url-pattern>/ajax.html</url-pattern>
+  <servlet-name>Controller</servlet-name>
+  <url-pattern>/api_rest/delete_utenti</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+  <servlet-name>Controller</servlet-name>
+  <url-pattern>/api_rest/put_utente</url-pattern>
 </servlet-mapping>
   
   <servlet>

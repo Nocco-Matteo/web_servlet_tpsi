@@ -48,10 +48,10 @@
 		</div>
 	</footer>
 	<script type="text/javascript">
+	
 		async function get_utenti() {
 		  const response = await fetch('api_rest/get_utenti');
 		  const utenti = await response.json();
-		  
 		  return utenti;
 		}
 		
@@ -62,39 +62,168 @@
 			
 			const utenti = await get_utenti();
 			
-			console.log(utenti);
 			// Popola la tabella con i dati
 			for(const p of utenti){
 			  const riga = document.createElement('tr');
-			  riga.innerHTML = `
-			    <td>${p.nome}</td>
-			    <td>${p.cognome}</td>
-			    <td>${p.email}</td>
-			    <td><button class="modifica">Modifica</button></td>
-			    <td><button class="elimina">Elimina</button></td>
-			  `;
+			  
+			  if(p.email != "admin@admin")  
+		    {
+				  riga.innerHTML = `
+					    <td data-campo="nome">${p.nome}</td>
+					    <td data-campo="cognome">${p.cognome}</td>
+					    <td data-campo="email">${p.email}</td>
+					    <td><button class="modifica" onclick="modifica_riga(this.parentNode.parentNode)">Modifica</button></td>
+				    	<td><button class="elimina" onclick="elimina_utente(this.parentNode.parentNode)">Elimina</button></td>`; 
+		    }
+			  else
+			  {
+				  riga.innerHTML = `
+					    <td>${p.nome}</td>
+					    <td>${p.cognome}</td>
+					    <td>${p.email}</td>
+					    <td></td>
+					    <td></td>`; 
+			  }
+			  
 			  tabella.appendChild(riga);
 			};
 		}
 		
-		async function eliminaUtente(id) 
-		{
-		  try {
-		    const response = await fetch(`api_rest/delete_utente?id=${id}`, {
-		      method: 'DELETE',
+		function modifica_riga(riga) {
+			  let conta = 0;
+			  let valori_iniziali = []; // array per salvare i valori iniziali delle celle modificabili
+			  // Rendi la riga modificabile
+			  riga.querySelectorAll('td').forEach(td => {
+			    if (conta < 2) {
+			      td.contentEditable = true;
+			      td.style.backgroundColor = 'yellow';
+			      conta++;
+			      valori_iniziali.push(td.textContent); // salva il valore iniziale della cella modificabile
+			    }
+			  });
+
+			  // Cambia il testo e l'onclick del bottone Modifica
+			  const modifica_btn = riga.querySelector('button.modifica');
+			  modifica_btn.textContent = 'Salva';
+			  modifica_btn.onclick = function() {salva_riga(this.parentNode.parentNode)};
+
+			  // Cambia il testo e l'onclick del bottone Elimina
+			  const elimina_btn = riga.querySelector('button.elimina');
+			  elimina_btn.textContent = 'Annulla';
+			  elimina_btn.onclick = function() {
+			    annulla(this.parentNode.parentNode, valori_iniziali); // passa i valori iniziali alla funzione annulla
+			  };
+			}
+		
+		function salva_riga(riga) {
+			let conta=0;
+		    // Seleziona tutti i campi modificabili della riga
+		    riga.querySelectorAll('td').forEach(td => {
+				if(conta<2)
+			 	{
+				 	td.contentEditable = true;
+				   	td.style.backgroundColor = '';
+				  	conta++;
+			 	}
+		 	 });
+		    
+		    const campiModificabili = riga.querySelectorAll('td:nth-child(-n+3)');
+		    
+		    // Crea un oggetto con i valori dei campi modificabili
+		    const valoriCampi = {};
+		    campiModificabili.forEach(td => {
+		        const nomeCampo = td.dataset.campo; //ritorna data-campo dagli elementi td della riga
+		        const valoreCampo = td.textContent.trim();
+		        valoriCampi[nomeCampo] = valoreCampo;
 		    });
-		    const result = await response.json();
-		    if (result.success) {
-		      // l'utente è stato eliminato con successo
-		      console.log('Utente eliminato con successo.');
-		      // aggiorna la tabella
-		      await popola_tabella();
-		    } else {
-		      console.error(result.message);
-		    }
-		  } catch (error) {
-		    console.error(error);
-		  }
+		    
+		    console.log(JSON.stringify(valoriCampi));
+		    // Esegui la richiesta di salvataggio
+		    
+		    fetch('api_rest/put_utente', {
+		        method: 'PUT',
+		        headers: {
+		            'Content-Type': 'application/json'
+		        },
+		        body: JSON.stringify(valoriCampi)
+		    })
+		    .then(response => {
+		        if (!response.ok) {
+		            throw new Error('Errore durante il salvataggio della riga');
+		        }
+		        return response.json();
+		    })
+		    .then(data => {
+			    if (data.success) {
+			        // Aggiungi qui la logica per aggiornare la riga con i nuovi dati
+			        console.log('Riga salvata con successo:', data);
+			    } else {
+			        throw new Error('Errore durante il salvataggio della riga');
+			    }
+			})
+		    .catch(error => {
+		        console.error(error);
+		        alert('Si è verificato un errore durante il salvataggio della riga');
+		    });
+
+		    const salva_btn = riga.querySelector('button.modifica');
+		    salva_btn.textContent = 'Modifica';
+		    salva_btn.onclick = function() {modifica_riga(this.parentNode.parentNode);};
+		    
+		    // Cambia il testo e l'onclick del bottone Elimina
+		    const annulla_btn = riga.querySelector('button.elimina');
+		    annulla_btn.textContent = 'Elimina';
+		    annulla_btn.onclick = function() {elimina_utente(this.parentNode.parentNode)};
+		}
+		function annulla(riga, valori_iniziali) {
+			  let conta = 0;
+			  riga.querySelectorAll('td').forEach(td => {
+			    if (conta < 2) {
+			      td.contentEditable = false;
+			      td.style.backgroundColor = '';
+			      td.textContent = valori_iniziali[conta]; // ripristina il valore iniziale della cella modificabile
+			      conta++;
+			    }
+			  });
+
+			  // Cambia il testo e l'onclick del bottone Modifica
+			  const modifica_btn = riga.querySelector('button.modifica');
+			  modifica_btn.textContent = 'Modifica';
+			  modifica_btn.onclick = function() {modifica_riga(this.parentNode.parentNode)};
+
+			  // Cambia il testo e l'onclick del bottone Elimina
+			  const elimina_btn = riga.querySelector('button.elimina');
+			  elimina_btn.textContent = 'Elimina';
+			  elimina_btn.onclick = function() {elimina_riga(this.parentNode.parentNode)};
+			}
+		async function elimina_utente(riga) 
+		{
+			//rimuove la riga selezionata
+			riga.parentNode.removeChild(riga);
+			
+			const email = riga.querySelector('td:nth-child(3)').textContent;
+			console.log(email);
+			 const options = {
+					    method: 'DELETE',
+					    headers: {
+					      'Content-Type': 'application/json'
+					    }
+					  };
+
+			  // Esegue la richiesta HTTP DELETE utilizzando la funzione fetch()
+			  fetch(`api_rest/delete_utente?email=${email}`, options)
+			    .then(response => {
+			      if (response.ok) {
+			        // La richiesta è stata completata con successo
+			        console.log('Eliminazione completata con successo.');
+			      } else {
+			        // La richiesta non è stata completata con successo
+			        console.log('Si è verificato un errore durante l\'eliminazione.');
+			      }
+			    })
+			    .catch(error => {
+			      console.log('Si è verificato un errore durante l\'invio della richiesta.', error);
+			    });
 		}
 		
 	  	popola_tabella();
