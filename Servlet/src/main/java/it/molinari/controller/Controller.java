@@ -32,24 +32,20 @@ import it.molinari.model.Utente;
 import it.molinari.service.Api_rest;
 import it.molinari.service.UtenteService;
 
-
 public  class  Controller extends HttpServlet
 {
-	private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  //data e ora
-	private LocalDateTime now = LocalDateTime.now(); //data e ora
-	private Utente utente;
-	private UtenteService servizio;
-	private Api_rest api;
-	private RequestDispatcher dispatcher;
-	private String pagina="";
-	//gestione curl get
+	private Utente utente; //utente
+	private UtenteService servizio; //servizi per l'utente
+	private Api_rest api; //servizi api rest
+	private RequestDispatcher dispatcher; //dispatcher
+	private String pagina=""; //pagina richiesta
 	
+	//gestione richieste get
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		try 
 		{
 			//System.out.println(dtf.format(now));  
-			log("Sono nel get");
 			HttpSession session = request.getSession();
 			String file; //path del file da inviare
 			String pagina = dividi_uri(request.getRequestURI());//pagina richiesta
@@ -60,41 +56,34 @@ public  class  Controller extends HttpServlet
 				case "style": //ritorna lo stile dell'index
 					response.setContentType("text/css");
 					file = "/css/style.css";
-					log("Sono nel style");
 					get_file(response,file);
 				break;
 				case "style_js": //ritorna lo stile dell'index
 					response.setContentType("text/css");
 					file = "/css/style_js.css";
-					log("Sono nel style");
 					get_file(response,file);
 				break;
 				case "script": //ritorna lo stile dell'index
 					response.setContentType("text/javascript");
 					file = "/script/script.js";
-					log("Sono nel style");
 					get_file(response,file);
 				break;
 				case "logo": //ritorna il logo della pagina
 					response.setContentType("image/png");
-					log("Sono nel logo");
 					file = "/img/logo.png";
 					get_file(response,file);
 				break;
 				case "background": //ritorna il background della pagina
 					response.setContentType("image/png");
-					log("Sono nel bg");
 					file = "/img/bg.png";
 					get_file(response,file);
 				break;
 				case "nav":
 					response.setContentType("image/png");
-					log("Sono nel nav");
 					file = "/img/nav.png";
 					get_file(response,file);
 				break;
 				case "centrale":
-					log("Sono nel centrale");
 					response.setContentType("image/png");
 					file = "/img/col_bg.png";
 					get_file(response,file);
@@ -107,8 +96,7 @@ public  class  Controller extends HttpServlet
 				break;
 				case "get_utenti": get_utenti(request,response);
 				break;
-				default: //ritorna l'index
-					//get_file(response,file);
+				default: 
 					RequestDispatcher dispatch = request.getRequestDispatcher("index.jsp");
 					dispatch.forward(request, response);
 			}
@@ -116,26 +104,15 @@ public  class  Controller extends HttpServlet
 		} 
 		catch (Exception e){e.printStackTrace();}
 	}	
-	
-	//esce dall'account corrente
-	private void esci(HttpServletResponse response, HttpSession session) throws Exception {
-		session.invalidate();
-		response.sendRedirect("index.jsp");
-	}
-
-
-	//gestione curl post
+	//gestione richieste post
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		try 
 		{
-			System.out.println(dtf.format(now));  
-			log("Sono nel post");
 			HttpSession session = request.getSession();
 			servizio = new UtenteService();//servizio per eseguire l'operazione richiesta dall'utente
 			pagina = dividi_uri(request.getRequestURI());//pagina richiesta
 			
-			log("Pagina: "+pagina);
 			switch(pagina)
 			{
 				case "registra": registra(request,response,session); //esegue la registrazione di un utente
@@ -143,8 +120,6 @@ public  class  Controller extends HttpServlet
 				case "accedi": accedi(request,response,session); //prova l'accesso ad un account
 				break;
 				case "modifica": modifica(request,response,session); //modifica il nome,cognome e/o la password di un account
-				break;
-				case "get_utenti":
 				break;
 				default: throw new IllegalArgumentException("Errore");
 			}
@@ -175,31 +150,15 @@ public  class  Controller extends HttpServlet
 		}
 		catch(Exception e){e.printStackTrace();}
 	}
-	//ritorna un file in base al path e con il content type passato
-	public void get_utenti(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		log("get utenti");
-		//utente = 
-		api = new Api_rest();
-		
-		List<Utente> lista = api.get_utenti();
-		
-		Gson gson = new Gson();
-		String json = gson.toJson(lista);
-		
-	    response.setContentType("application/json");
-	    response.getWriter().write(json);
-	}
+	//gestione richieste delete
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		try 
 		{
-			System.out.println(dtf.format(now));  
-			log("Sono nel delete");
 			HttpSession session = request.getSession();
 			servizio = new UtenteService();//servizio per eseguire l'operazione richiesta dall'utente
 			pagina = dividi_uri(request.getRequestURI());//pagina richiesta
 			
-			log("Pagina: "+pagina);
 			switch(pagina)
 			{
 				case "delete_utente": delete_utente(request,response, session); //esegue la registrazione di un utente
@@ -209,12 +168,11 @@ public  class  Controller extends HttpServlet
 		} 
 		catch(Exception e){e.printStackTrace();}
 	}
-	
+	//gestione richieste put
 	protected void doPut(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException
 	{
 		try 
 		{
-			System.out.println(dtf.format(now));  
 			log("Sono nel put");
 			HttpSession session = request.getSession();
 			servizio = new UtenteService();//servizio per eseguire l'operazione richiesta dall'utente
@@ -231,6 +189,8 @@ public  class  Controller extends HttpServlet
 		} 
 		catch(Exception e){e.printStackTrace();}
 	}
+	
+	//api modifica utente
 	private void put(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String json = leggi_corpo_request(request);
 		System.out.println("parametro: "+json);
@@ -245,7 +205,7 @@ public  class  Controller extends HttpServlet
 		response.setContentType("application/json");
 		response.getWriter().write("{\"success\": true}");
 	}
-
+	//legge il corpo della request e ritorna una stringa con i campi
 	public String leggi_corpo_request(HttpServletRequest request) throws Exception
 	{
 		BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
@@ -256,6 +216,26 @@ public  class  Controller extends HttpServlet
         }
         return sb.toString();
 	}
+	//esce dall'account corrente
+	private void esci(HttpServletResponse response, HttpSession session) throws Exception {
+		session.invalidate();
+		response.sendRedirect("index.jsp");
+	}
+	//api elenco utenti
+	public void get_utenti(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		log("get utenti");
+		//utente = 
+		api = new Api_rest();
+		
+		List<Utente> lista = api.get_utenti();
+		
+		Gson gson = new Gson();
+		String json = gson.toJson(lista);
+		
+	    response.setContentType("application/json");
+	    response.getWriter().write(json);
+	}
+	//api elimina utente
 	public void delete_utente(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception
 	{ 
 		log("elimina");
@@ -291,8 +271,6 @@ public  class  Controller extends HttpServlet
 				+stringToBase64("entrato"));
         dispatcher.forward(request, response); 
 	}
-	//
-	
 	//prova l'accesso ad un account 
 	public void accedi(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception
 	{
@@ -307,6 +285,7 @@ public  class  Controller extends HttpServlet
         dispatcher = request.getRequestDispatcher("index.jsp?page="+stringToBase64("entrato"));
         dispatcher.forward(request, response);
 	}
+	//prova la modifica di un account
 	public void modifica(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception
 	{
 		log("modifica");
@@ -324,7 +303,7 @@ public  class  Controller extends HttpServlet
         dispatcher.forward(request, response);
 
 	}
-	
+	//elimina un account
 	public void elimina(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception
 	{
 		log("elimina");
@@ -337,14 +316,16 @@ public  class  Controller extends HttpServlet
         dispatcher = request.getRequestDispatcher("index.jsp");
         dispatcher.forward(request, response);
 	}
-	public void imposta_session(HttpSession session) //imposta la sessione
+	//imposta la sessione con l'utente globale
+	public void imposta_session(HttpSession session) 
 	{
 		session.setAttribute("nome", utente.get_nome());
         session.setAttribute("cognome", utente.get_cognome());
         session.setAttribute("email", utente.get_email());
         session.setAttribute("password", utente.get_password());
 	}
-	public void controllo(HttpServletRequest request, HttpServletResponse response) throws Exception //controlli regex
+	//controllo RegEx
+	public void controllo(HttpServletRequest request, HttpServletResponse response) throws Exception 
 	{
 		if(pagina=="modifica") return;
 		
@@ -370,6 +351,7 @@ public  class  Controller extends HttpServlet
 		if(!matcher.matches()) throw new IllegalArgumentException("password");
 		log("riuscita");
 	}	
+	//invia il file richiesto
 	protected void get_file(HttpServletResponse response, String path) throws Exception //invia un file del path dichiarato
 	{
 		InputStream in = getServletContext().getResourceAsStream(path);
@@ -382,7 +364,8 @@ public  class  Controller extends HttpServlet
 	    in.close();
 	    out.flush();
 	}
-	public String dividi_uri(String uri)//divide l'uri
+	//divide l'uri e ritorna l'ultima parte
+	public String dividi_uri(String uri)
 	{
 		System.out.println("divido "+uri);
 		String[] splitted = uri.split("/");
@@ -394,20 +377,18 @@ public  class  Controller extends HttpServlet
 		}
 			return splitted[2]; //
 	}
-	public static String stringToBase64(String str) //da stringa a base64
+	//prende una stringa e ritorna il base64
+	public static String stringToBase64(String str)
 	{
 	    byte[] bytes = str.getBytes();
 	    byte[] encoded = Base64.getEncoder().encode(bytes);
 	    return new String(encoded);
 	}
-	public static String base64ToString(String base64) //da base64 a stringa
+	//prende un base64 e ritorna la stringa
+	public static String base64ToString(String base64) 
 	{
 	    byte[] decoded = Base64.getDecoder().decode(base64);
 	    return new String(decoded);
-	}
-	public void log(String stringa) //scrive in console un valore
-	{
-		System.out.println(stringa);
 	}
 }
 

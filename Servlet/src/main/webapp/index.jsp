@@ -149,7 +149,7 @@
 	<!-- Corpo Pagina -->
 	<div class="container-fluid corpo" >
 		<div class="row">
-			<div class="col"></div>
+			<div class="col"></div> <!-- col per spazio -->
 			<div class="centrale col-md-5 pt-2" style="background-image:url('${pageContext.request.contextPath}/centrale">
 				<%if(pagina.equals("registra") && (!accesso || (tipo_errore !=""))){%>
 					<!-- BLOCCO REGISTRAZIONE -->
@@ -194,7 +194,6 @@
 							<button type="button" class="btn btn-primary button_a" ><a href="http://localhost:8080/Servlet/index.jsp?page=<%=stringToBase64("accedi")%>">Accedi</a></button>
 						</div>
 					</div>
-				
 				<%} else if(pagina.equals("accedi") && !accesso){ %>
 					<!-- BLOCCO ACCEDI -->
 					<form method="POST" action="http://localhost:8080/Servlet/accedi">
@@ -219,14 +218,14 @@
 						</div>
 						<hr>
 						</form>
-						<div class="bottoni">
-							<div class="d-flex flex-column align-items-center">
-								<p>Non hai ancora un account?</p>
-								<button type="button" class="btn btn-primary button_a" ><a href="http://localhost:8080/Servlet/index.jsp?page=<%=stringToBase64("registra")%>">Registrati</a></button>
-							</div>
+					<div class="bottoni">
+						<div class="d-flex flex-column align-items-center">
+							<p>Non hai ancora un account?</p>
+							<button type="button" class="btn btn-primary button_a" ><a href="http://localhost:8080/Servlet/index.jsp?page=<%=stringToBase64("registra")%>">Registrati</a></button>
 						</div>
-					</form>
+					</div>
 				<% }else if(pagina.equals("profilo") && accesso){%>
+			        <!-- BLOCCO GESTIONE PROFILO -->
 			        <form method="POST" action="http://localhost:8080/Servlet/modifica">
 			        	<p><b>Modifica Profilo Utente</b></p>
 			        	<hr>
@@ -286,8 +285,8 @@
 						Buon divertimento!</p>
 				      <button type="button" class="btn btn-primary button_a" ><a href="http://localhost:8080/Servlet/esci">Esci</a></button>
 				    </div>
-				
 				<%} else{%>
+					<!-- BLOCCO HOME -->
 					<div class="col mb-4 mx-auto text-center">
 						<div class="mt-4 d-flex flex-row justify-content-center">
 							<h1>Benvenuto in SIGLOG</h1>
@@ -320,8 +319,9 @@
 				      <button type="button" class="btn btn-primary button_a" ><a href="http://localhost:8080/Servlet/index.jsp?page=<%=stringToBase64("registra")%>">Registrati</a></button>
 				    </div>
 				<%} %>
+				
 			</div>
-			<div class="col"></div>
+			<div class="col"></div> <!-- col per spazio -->
 		</div>
 	</div>
 	<!-- Footbar -->
