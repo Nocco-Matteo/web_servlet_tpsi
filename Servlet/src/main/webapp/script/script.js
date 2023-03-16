@@ -17,30 +17,5 @@ const is_logged_in = (nome) =>
         return true;
 }
 
-var dati = [
-    { id: 1, nome: "Mario", cognome: "Rossi", eta: 30 },
-    { id: 2, nome: "Luigi", cognome: "Verdi", eta: 35 },
-    { id: 3, nome: "Anna", cognome: "Bianchi", eta: 25 }
-  ];
 
-  function popolaTabella(data) {
-    var table = $("#tabella");
-    table.empty();
-    var headerRow = $("<tr></tr>");
-    headerRow.append("<th>ID</th>");
-    headerRow.append("<th>Nome</th>");
-    headerRow.append("<th>Cognome</th>");
-    headerRow.append("<th>Età</th>");
-    table.append(headerRow);
 
-    for (var i = 0; i < data.length; i++) {
-      var row = $("<tr></tr>");
-      row.append("<td>" + data[i].id + "</td>");
-      row.append("<td>" + data[i].nome + "</td>");
-      row.append("<td>" + data[i].cognome + "</td>");
-      row.append("<td>" + data[i].eta + "</td>");
-      table.append(row);
-    }
-  }
-
-  popolaTabella(dati);

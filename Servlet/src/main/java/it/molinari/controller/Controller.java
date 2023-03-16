@@ -30,8 +30,8 @@ import it.molinari.model.Utente;
 import it.molinari.service.Api_rest;
 import it.molinari.service.UtenteService;
 
-@WebServlet("/")
-public  class  Controller <generico> extends HttpServlet
+
+public  class  Controller extends HttpServlet
 {
 	private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  //data e ora
 	private LocalDateTime now = LocalDateTime.now(); //data e ora
@@ -41,12 +41,13 @@ public  class  Controller <generico> extends HttpServlet
 	private RequestDispatcher dispatcher;
 	private String pagina="";
 	//gestione curl get
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		try 
 		{
 			//System.out.println(dtf.format(now));  
-			log("Sono nel gett");
+			log("Sono nel get");
 			HttpSession session = request.getSession();
 			String file; //path del file da inviare
 			String pagina = dividi_uri(request.getRequestURI());//pagina richiesta
@@ -57,6 +58,18 @@ public  class  Controller <generico> extends HttpServlet
 				case "style": //ritorna lo stile dell'index
 					response.setContentType("text/css");
 					file = "/css/style.css";
+					log("Sono nel style");
+					get_file(response,file);
+				break;
+				case "style_js": //ritorna lo stile dell'index
+					response.setContentType("text/css");
+					file = "/css/style_js.css";
+					log("Sono nel style");
+					get_file(response,file);
+				break;
+				case "script": //ritorna lo stile dell'index
+					response.setContentType("text/javascript");
+					file = "/script/script.js";
 					log("Sono nel style");
 					get_file(response,file);
 				break;
@@ -88,7 +101,7 @@ public  class  Controller <generico> extends HttpServlet
 				break;
 				case "esci": // esci(request,response,session); TODO
 				break;
-				case "utenti": response.sendRedirect("index.html");
+				case "utenti": response.sendRedirect("http://localhost:8080/Servlet/ajax.html");
 				break;
 				case "get_utenti": get_utenti(request,response);
 				break;
@@ -162,16 +175,11 @@ public  class  Controller <generico> extends HttpServlet
 		
 		List<Utente> lista = api.get_utenti();
 		
-		Gson json = new Gson();
-		String jstring = json.toJson(lista);
+		Gson gson = new Gson();
+		String json = gson.toJson(lista);
 		
-		System.out.println(jstring);
-//		log("prima di set attribute");
-//		//impostazione parametri della sessione
-//		log("prima di dispatcher");
-//        dispatcher = request.getRequestDispatcher("index.jsp?page="
-//				+stringToBase64("entrato"));
-//        dispatcher.forward(request, response); 
+	    response.setContentType("application/json");
+	    response.getWriter().write(json);
 	}
 	//esegue la registrazione di un utente e rimanda alla pagina di benvenuto
 	public void registra(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception
@@ -287,10 +295,15 @@ public  class  Controller <generico> extends HttpServlet
 	}
 	public String dividi_uri(String uri)//divide l'uri
 	{
+		System.out.println("divido "+uri);
 		String[] splitted = uri.split("/");
-		if(splitted[2]=="api_rest") //se è una richiesta api
+		
+		if(splitted[2].equals("api_rest")) //se è una richiesta api
+		{
+			System.out.println(splitted[2]+" c'è "+splitted[3]);
 			return splitted[3]; //ritorna la 4 cella
-		return splitted[2]; //
+		}
+			return splitted[2]; //
 	}
 	public static String stringToBase64(String str) //da stringa a base64
 	{

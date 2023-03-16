@@ -19,46 +19,18 @@
     <servlet-name>Controller</servlet-name>
     <servlet-class>it.molinari.controller.Controller</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>Controller</servlet-name>
-    <url-pattern>/registra</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>Controller</servlet-name>
-    <url-pattern>/accedi</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>Controller</servlet-name>
-    <url-pattern>/siglog</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>Controller</servlet-name>
-    <url-pattern>/modifica</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>Controller</servlet-name>
-    <url-pattern>/elimina</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>Controller</servlet-name>
-    <url-pattern>/background</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>Controller</servlet-name>
-    <url-pattern>/logo</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>Controller</servlet-name>
-    <url-pattern>/style</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>Controller</servlet-name>
-    <url-pattern>/centrale</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>Controller</servlet-name>
-    <url-pattern>/nav</url-pattern>
-  </servlet-mapping>
+<servlet-mapping>
+  <servlet-name>Controller</servlet-name>
+  <url-pattern>/</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+  <servlet-name>Controller</servlet-name>
+  <url-pattern>/api_rest/get_utenti</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+  <servlet-name>default</servlet-name>
+  <url-pattern>/ajax.html</url-pattern>
+</servlet-mapping>
   
   <servlet>
     <servlet-name>Dao</servlet-name>
